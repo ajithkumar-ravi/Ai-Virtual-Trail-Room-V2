@@ -41,6 +41,7 @@ export const VirtualTryOnPage: React.FC<VirtualTryOnPageProps> = ({ product, onB
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [result, setResult] = useState<TryOnResult | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [isQuotaError, setIsQuotaError] = useState<boolean>(false);
   const [isApiKeyModalOpen, setIsApiKeyModalOpen] = useState(false);
 
   useEffect(() => {
@@ -76,6 +77,7 @@ export const VirtualTryOnPage: React.FC<VirtualTryOnPageProps> = ({ product, onB
 
     setIsLoading(true);
     setError(null);
+    setIsQuotaError(false);
     setResult(null);
 
     try {
@@ -88,10 +90,14 @@ export const VirtualTryOnPage: React.FC<VirtualTryOnPageProps> = ({ product, onB
     } catch (err) {
       console.error(err);
       const errorMessage = err instanceof Error ? err.message : 'An unexpected error occurred.';
-      // Check for common API key-related errors
-      if (errorMessage.toLowerCase().includes('api key')) {
+      const lowerCaseError = errorMessage.toLowerCase();
+
+      if (lowerCaseError.includes('api key')) {
         setError('Your API Key is invalid or missing. Please check it and try again.');
         setIsApiKeyModalOpen(true); // Re-open modal on key error
+      } else if (lowerCaseError.includes('quota') || lowerCaseError.includes('resource_exhausted')) {
+        setError('You have exceeded the free tier usage limit for the API.');
+        setIsQuotaError(true);
       } else {
         setError(`${errorMessage} Please try again.`);
       }
@@ -152,7 +158,13 @@ export const VirtualTryOnPage: React.FC<VirtualTryOnPageProps> = ({ product, onB
           />
            {error && (
             <div className="text-red-500 bg-red-100 dark:text-red-300 dark:bg-red-900/50 p-3 rounded-lg">
-              <span>{error}</span>
+              <p>{error}</p>
+              {isQuotaError && (
+                  <p className="mt-2 text-sm">
+                      Please wait a moment before retrying. To increase your limits, you can 
+                      <a href="https://ai.google.dev/gemini-api/docs/billing" target="_blank" rel="noopener noreferrer" className="font-semibold underline hover:text-red-600 dark:hover:text-red-200"> set up billing for your project</a>.
+                  </p>
+              )}
             </div>
           )}
         </div>

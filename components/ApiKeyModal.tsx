@@ -34,6 +34,7 @@ export const ApiKeyModal: React.FC<ApiKeyModalProps> = ({ onSave, onClose }) => 
                 <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
                     To use the Virtual Try-On feature, please provide your Google AI Studio API key. 
                     Your key is stored only in your browser session and is never shared.
+                    Note: Heavy usage may require you to <a href="https://ai.google.dev/gemini-api/docs/billing" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">enable billing</a> on your Google Cloud project.
                 </p>
                 <div className="space-y-4">
                     <input
