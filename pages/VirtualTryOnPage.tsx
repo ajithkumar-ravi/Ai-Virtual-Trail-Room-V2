@@ -2,9 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { ImageUploader } from '../components/ImageUploader';
 import { TryOnControls } from '../components/TryOnControls';
 import { ResultDisplay } from '../components/ResultDisplay';
-import { generateTryOnImage, getFitAssessment, getApiKey, setApiKey } from '../services/geminiService';
+import { generateTryOnImage, getFitAssessment } from '../services/geminiService';
 import { ContextData, TryOnResult, Product } from '../types';
-import { ApiKeyModal } from '../components/ApiKeyModal';
 
 interface VirtualTryOnPageProps {
     product: Product;
@@ -42,7 +41,6 @@ export const VirtualTryOnPage: React.FC<VirtualTryOnPageProps> = ({ product, onB
   const [result, setResult] = useState<TryOnResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isQuotaError, setIsQuotaError] = useState<boolean>(false);
-  const [isApiKeyModalOpen, setIsApiKeyModalOpen] = useState(false);
 
   useEffect(() => {
     // Pre-load the garment image from the product
@@ -56,20 +54,9 @@ export const VirtualTryOnPage: React.FC<VirtualTryOnPageProps> = ({ product, onB
         }
     };
     loadGarmentImage();
-    
-    // Check for API key when component mounts
-    if (!getApiKey()) {
-      setIsApiKeyModalOpen(true);
-    }
   }, [product]);
 
   const handleTryOn = async () => {
-    if (!getApiKey()) {
-      setError('Please set your API key to use the virtual try-on feature.');
-      setIsApiKeyModalOpen(true);
-      return;
-    }
-      
     if (!userImage || !garmentImage) {
       setError('Please upload your photo to begin.');
       return;
@@ -92,10 +79,7 @@ export const VirtualTryOnPage: React.FC<VirtualTryOnPageProps> = ({ product, onB
       const errorMessage = err instanceof Error ? err.message : 'An unexpected error occurred.';
       const lowerCaseError = errorMessage.toLowerCase();
 
-      if (lowerCaseError.includes('api key')) {
-        setError('Your API Key is invalid or missing. Please check it and try again.');
-        setIsApiKeyModalOpen(true); // Re-open modal on key error
-      } else if (lowerCaseError.includes('quota') || lowerCaseError.includes('resource_exhausted')) {
+      if (lowerCaseError.includes('quota') || lowerCaseError.includes('resource_exhausted')) {
         setError('You have exceeded the free tier usage limit for the API.');
         setIsQuotaError(true);
       } else {
@@ -115,17 +99,6 @@ export const VirtualTryOnPage: React.FC<VirtualTryOnPageProps> = ({ product, onB
           <BackArrowIcon />
           Back to Product
       </button>
-
-      {isApiKeyModalOpen && (
-        <ApiKeyModal
-          onSave={(key) => {
-            setApiKey(key);
-            setIsApiKeyModalOpen(false);
-            setError(null); // Clear any "please set a key" errors
-          }}
-          onClose={() => setIsApiKeyModalOpen(false)}
-        />
-      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Input Column */}

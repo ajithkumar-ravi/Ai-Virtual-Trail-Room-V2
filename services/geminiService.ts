@@ -1,33 +1,9 @@
-
-
 import { GoogleGenAI, Type, Modality } from "@google/genai";
 import { ContextData, FitAssessmentItem } from '../types';
 
-// --- API Key Management ---
-const API_KEY_SESSION_STORAGE_KEY = 'gemini-api-key';
-
-export const getApiKey = (): string | null => {
-    // Check if sessionStorage is available (for safety in non-browser environments)
-    if (typeof sessionStorage === 'undefined') return null;
-    return sessionStorage.getItem(API_KEY_SESSION_STORAGE_KEY);
-};
-
-export const setApiKey = (apiKey: string): void => {
-    if (typeof sessionStorage === 'undefined') return;
-    if (apiKey) {
-        sessionStorage.setItem(API_KEY_SESSION_STORAGE_KEY, apiKey);
-    } else {
-        sessionStorage.removeItem(API_KEY_SESSION_STORAGE_KEY);
-    }
-};
-// --- End API Key Management ---
-
-
 const getAiClient = (): GoogleGenAI => {
-    const apiKey = getApiKey();
-    // The genai library will throw a helpful error if the key is invalid or null.
-    // The UI is designed to catch this error and prompt the user.
-    return new GoogleGenAI({ apiKey: apiKey! });
+    // The API key is now obtained exclusively from the environment variable.
+    return new GoogleGenAI({ apiKey: process.env.API_KEY });
 };
 
 

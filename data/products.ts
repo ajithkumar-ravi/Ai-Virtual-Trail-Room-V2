@@ -237,7 +237,7 @@ export const products: Product[] = [
     name: 'Elegant Silk Saree',
     price: 12499,
     category: 'Saree',
-    image: 'https://images.unsplash.com/photo-1610192353242-a320b6045118?q=80&w=1974&auto=format&fit=crop',
+    image: 'https://images.unsplash.com/photo-1583391724989-d1350109f95f?q=80&w=2070&auto=format&fit=crop',
     description: 'Drape yourself in luxury with this elegant silk saree. Featuring intricate patterns and a rich texture, it\'s perfect for weddings.'
   },
   {

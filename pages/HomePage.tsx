@@ -7,9 +7,9 @@ interface HomePageProps {
 
 const categories = [
     { name: 'T-Shirt', imageUrl: 'https://images.unsplash.com/photo-1576566588028-4147f3842f27?q=80&w=1964&auto=format&fit=crop' },
-    { name: 'Shirt', imageUrl: 'https://images.unsplash.com/photo-1596755032483-219d78438aad?q=80&w=1974&auto=format&fit=crop' },
+    { name: 'Shirt', imageUrl: 'https://images.unsplash.com/photo-1607345366928-199ea26cfe3e?q=80&w=1974&auto=format&fit=crop' },
     { name: 'Pants', imageUrl: 'https://images.unsplash.com/photo-1541099649105-f69ad21f3246?q=80&w=1974&auto=format&fit=crop' },
-    { name: 'Saree', imageUrl: 'https://images.unsplash.com/photo-1583573636361-2674226e6a17?q=80&w=1974&auto=format&fit=crop' },
+    { name: 'Saree', imageUrl: 'https://images.unsplash.com/photo-1583391724989-d1350109f95f?q=80&w=2070&auto=format&fit=crop' },
 ];
 
 export const HomePage: React.FC<HomePageProps> = ({ onSelectCategory }) => {
