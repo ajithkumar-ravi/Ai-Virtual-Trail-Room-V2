@@ -26,57 +26,39 @@ An AI-powered virtual trial room that allows users to see how clothes fit on the
     npm install
     ```
 
-3.  **Start the development server:**
+3.  **Set up Environment Variables:**
+    - Create a `.env` file in the root directory.
+    - Add your API Key: `API_KEY=your_gemini_api_key_here`
+
+4.  **Start the development server:**
     ```bash
     npm run dev
     ```
-    The application will be available at `http://localhost:5173` (or another port if 5173 is in use). The virtual try-on feature will work out of the box.
+    The application will be available at `http://localhost:5173`.
 
-## How to Deploy to GitHub Pages
+## Deployment
 
-This project is pre-configured for deployment to GitHub Pages.
+### Deploy to Vercel (Recommended)
 
-1.  **Create a GitHub Repository:**
-    - Create a new public repository on your GitHub account. Let's assume you name it `virtual-try-on-app`.
+1.  Push your code to a GitHub repository.
+2.  Import the project into Vercel.
+3.  **Crucial Step:** In the Vercel deployment settings, go to **Environment Variables**.
+4.  Add a new variable:
+    - **Name:** `API_KEY`
+    - **Value:** Your Google Gemini API Key.
+5.  Click **Deploy**.
 
-2.  **Update Configuration:**
-    - **`package.json`**: Open the `package.json` file and update the `homepage` field. Replace `<Your-GitHub-Username>` with your GitHub username and `<your-repo-name>` with your repository's name.
+### Deploy to GitHub Pages
+
+1.  **Update Configuration:**
+    - **`package.json`**: Update the `homepage` field.
       ```json
-      // Before
-      "homepage": "https://<Your-GitHub-Username>.github.io/<your-repo-name>",
-
-      // After (example)
-      "homepage": "https://johndoe.github.io/virtual-try-on-app",
+      "homepage": "https://<Your-Username>.github.io/<repo-name>",
       ```
-    - **`vite.config.js`**: Open the `vite.config.js` file and update the `base` property with your repository name.
-      ```javascript
-      // Before
-      base: '/your-repo-name/',
+    - **`vite.config.js`**: You may need to add `base: '/<repo-name>/'` inside `defineConfig` if not using a custom domain.
 
-      // After (example)
-      base: '/virtual-try-on-app/',
-      ```
-
-3.  **Push Code to Your Repository:**
-    - Initialize git and push your project to the new repository you created.
-      ```bash
-      git init
-      git add .
-      git commit -m "Initial commit"
-      git branch -M main
-      git remote add origin https://github.com/<Your-GitHub-Username>/<your-repo-name>.git
-      git push -u origin main
-      ```
-      *Remember to replace the placeholders in the URL.*
-
-4.  **Run the Deploy Script:**
-    - In your project's terminal, run the deploy command:
-      ```bash
-      npm run deploy
-      ```
-    - This will build the project and push the `dist` folder to a `gh-pages` branch on your repository.
-
-5.  **Check Your Live Site:**
-    - Go to your repository's settings on GitHub (`Settings` > `Pages`).
-    - Under "Build and deployment", ensure the source is set to **Deploy from a branch** and the branch is **`gh-pages`** with the `/ (root)` folder.
-    - After a few minutes, your site will be live at the URL you configured in `package.json`!
+2.  **Deploy:**
+    ```bash
+    npm run deploy
+    ```
+    *Note: For GitHub Pages, you must ensure the API Key is handled securely or injected during the build action.*

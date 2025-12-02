@@ -79,7 +79,9 @@ export const VirtualTryOnPage: React.FC<VirtualTryOnPageProps> = ({ product, onB
       const errorMessage = err instanceof Error ? err.message : 'An unexpected error occurred.';
       const lowerCaseError = errorMessage.toLowerCase();
 
-      if (lowerCaseError.includes('quota') || lowerCaseError.includes('resource_exhausted')) {
+      if (errorMessage.includes('MISSING_API_KEY')) {
+        setError('API Key is missing. Please go to your Vercel Project Settings > Environment Variables, add "API_KEY", and then Redeploy.');
+      } else if (lowerCaseError.includes('quota') || lowerCaseError.includes('resource_exhausted')) {
         setError('You have exceeded the free tier usage limit for the API.');
         setIsQuotaError(true);
       } else {
@@ -131,7 +133,7 @@ export const VirtualTryOnPage: React.FC<VirtualTryOnPageProps> = ({ product, onB
           />
            {error && (
             <div className="text-red-500 bg-red-100 dark:text-red-300 dark:bg-red-900/50 p-3 rounded-lg">
-              <p>{error}</p>
+              <p className="font-semibold">{error}</p>
               {isQuotaError && (
                   <p className="mt-2 text-sm">
                       Please wait a moment before retrying. To increase your limits, you can 

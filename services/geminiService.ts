@@ -1,9 +1,16 @@
-import { GoogleGenAI, Type, Modality } from "@google/genai";
+import { GoogleGenAI, Type } from "@google/genai";
 import { ContextData, FitAssessmentItem } from '../types';
 
 const getAiClient = (): GoogleGenAI => {
-    // The API key is now obtained exclusively from the environment variable.
-    return new GoogleGenAI({ apiKey: process.env.API_KEY });
+    // Use process.env.API_KEY directly as per @google/genai guidelines.
+    // The build system (Vite) replaces this with the actual key.
+    const apiKey = process.env.API_KEY;
+    
+    if (!apiKey) {
+        throw new Error("MISSING_API_KEY");
+    }
+
+    return new GoogleGenAI({ apiKey });
 };
 
 
@@ -35,19 +42,19 @@ export async function generateTryOnImage(userImage: string, garmentImage: string
         fileToGenerativePart(garmentImage, garmentImageMime),
       ],
     },
-    config: {
-        responseModalities: [Modality.IMAGE],
-    },
   });
 
-  if (response.candidates && response.candidates[0].content.parts[0].inlineData) {
-      const generatedPart = response.candidates[0].content.parts[0];
-      const base64Image = generatedPart.inlineData.data;
-      const mimeType = generatedPart.inlineData.mimeType;
-      return `data:${mimeType};base64,${base64Image}`;
-  } else {
-    throw new Error("Image generation failed or returned an unexpected format.");
+  if (response.candidates?.[0]?.content?.parts) {
+      for (const part of response.candidates[0].content.parts) {
+          if (part.inlineData) {
+              const base64Image = part.inlineData.data;
+              const mimeType = part.inlineData.mimeType;
+              return `data:${mimeType};base64,${base64Image}`;
+          }
+      }
   }
+  
+  throw new Error("Image generation failed or returned an unexpected format.");
 }
 
 export async function getFitAssessment(
